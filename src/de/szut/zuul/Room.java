@@ -22,6 +22,8 @@ public class Room
     public Room eastExit;
     public Room westExit;
 
+    public Room upstairs;
+    public Room downstairs;
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -54,6 +56,15 @@ public class Room
         }
         if(west != null) {
             westExit = west;
+        }
+    }
+
+    public void setStairs(Room up, Room down) {
+        if(up != null) {
+            upstairs = up;
+        }
+        if(down != null) {
+            downstairs = down;
         }
     }
 
