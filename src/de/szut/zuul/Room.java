@@ -14,16 +14,17 @@ package de.szut.zuul;
  * @author  Michael Kölling and David J. Barnes
  * @version 2016.02.29
  */
+
 public class Room 
 {
-    public String description;
-    public Room northExit;
-    public Room southExit;
-    public Room eastExit;
-    public Room westExit;
+    private String description;
+    private Room northExit;
+    private Room southExit;
+    private Room eastExit;
+    private Room westExit;
 
-    public Room upstairs;
-    public Room downstairs;
+    private Room upstairs;
+    private Room downstairs;
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -76,4 +77,52 @@ public class Room
         return description;
     }
 
+
+    public Room getExit(String direction) {
+        Room exit = null;
+        switch (direction) {
+            case "north":
+                exit = northExit;
+                break;
+            case "south":
+                exit = southExit;
+                break;
+            case "east":
+                exit = eastExit;
+                break;
+            case "west":
+                exit = westExit;
+                break;
+            case "up":
+                exit = upstairs;
+                break;
+            case "down":
+                exit = downstairs;
+                break;
+        }
+        return exit;
+    }
+
+    public String exitsToString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (northExit != null) {
+            stringBuilder.append("north ");
+        }
+        if (southExit != null) {
+            stringBuilder.append("south ");
+        }
+        if (eastExit != null) {
+            stringBuilder.append("east ");
+        }
+        if (westExit != null) {
+            stringBuilder.append("west ");
+        }
+        if (upstairs != null) {
+            stringBuilder.append("up ");
+        }
+        if (downstairs != null) {
+            stringBuilder.append("down ");
+        }
+        return stringBuilder.toString();
+    }
 }
