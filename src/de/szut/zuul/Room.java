@@ -1,5 +1,8 @@
 package de.szut.zuul;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class Room - a room in an adventure game.
  *
@@ -18,13 +21,8 @@ package de.szut.zuul;
 public class Room 
 {
     private String description;
-    private Room northExit;
-    private Room southExit;
-    private Room eastExit;
-    private Room westExit;
 
-    private Room upstairs;
-    private Room downstairs;
+    private Map<String, Room> exits;
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -34,6 +32,7 @@ public class Room
     public Room(String description) 
     {
         this.description = description;
+        this.exits = new HashMap<>();
     }
 
     /**
@@ -44,7 +43,7 @@ public class Room
      * @param south The south exit.
      * @param west The west exit.
      */
-    public void setExits(Room north, Room east, Room south, Room west) 
+    public void setExits(Room north, Room east, Room south, Room west)
     {
         if(north != null) {
             northExit = north;
@@ -60,14 +59,10 @@ public class Room
         }
     }
 
-    public void setStairs(Room up, Room down) {
-        if(up != null) {
-            upstairs = up;
-        }
-        if(down != null) {
-            downstairs = down;
-        }
+    public void setExit(String direction, Room neighbours) {
+        exits.put(direction, neighbours);
     }
+
 
     /**
      * @return The description of the room.
@@ -79,49 +74,13 @@ public class Room
 
 
     public Room getExit(String direction) {
-        Room exit = null;
-        switch (direction) {
-            case "north":
-                exit = northExit;
-                break;
-            case "south":
-                exit = southExit;
-                break;
-            case "east":
-                exit = eastExit;
-                break;
-            case "west":
-                exit = westExit;
-                break;
-            case "up":
-                exit = upstairs;
-                break;
-            case "down":
-                exit = downstairs;
-                break;
-        }
-        return exit;
+        return exits.getOrDefault(direction, null);
     }
 
     public String exitsToString() {
         StringBuilder stringBuilder = new StringBuilder();
-        if (northExit != null) {
-            stringBuilder.append("north ");
-        }
-        if (southExit != null) {
-            stringBuilder.append("south ");
-        }
-        if (eastExit != null) {
-            stringBuilder.append("east ");
-        }
-        if (westExit != null) {
-            stringBuilder.append("west ");
-        }
-        if (upstairs != null) {
-            stringBuilder.append("up ");
-        }
-        if (downstairs != null) {
-            stringBuilder.append("down ");
+        for (String direction : exits.keySet()) {
+            stringBuilder.append(direction).append(" ");
         }
         return stringBuilder.toString();
     }

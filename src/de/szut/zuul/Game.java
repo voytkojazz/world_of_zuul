@@ -52,13 +52,32 @@ public class Game
         wizardsRoom = new Room("in a wizard's room");
 
         // initialise room exits
-        marketsquare.setExits(tavern, templePyramid, null, sacrificialSite);
-        templePyramid.setExits(hut, null, null, marketsquare);
-        tavern.setExits(null, hut, marketsquare, null);
-        sacrificialSite.setExits(null, marketsquare, null , null);
+        marketsquare.setExit("north", tavern);
+        marketsquare.setExit("east", templePyramid);
+        marketsquare.setExit("west", sacrificialSite);
+
+        templePyramid.setExit("north", hut);
+        templePyramid.setExit("west", marketsquare);
+
+        tavern.setExit("east", hut);
+        tavern.setExit("south", marketsquare);
+
+        sacrificialSite.setExit("east", marketsquare);
+
         hut.setExits(null, jungle, templePyramid, tavern);
+
+        hut.setExit("east", jungle);
+        hut.setExit("south", templePyramid);
+        hut.setExit("west", tavern);
+
         jungle.setExits(null, null, null, hut);
+
+        jungle.setExit("west", hut);
+
         secretPassage.setExits(null, basement, null, cave);
+        secretPassage.setExit("east", basement);
+        secretPassage.setExit("west", cave);
+
         cave.setExits(null, secretPassage, beach, null);
         beach.setExits(cave, null, null, null);
         basement.setExits(null, null, null, secretPassage);
