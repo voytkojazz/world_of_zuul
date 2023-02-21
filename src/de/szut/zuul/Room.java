@@ -66,4 +66,12 @@ public class Room
         }
         return stringBuilder.toString();
     }
+
+    public String getLongDescription() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("You are ").append(this.getDescription())
+                .append("\n").append("Exits: ").append(this.exitsToString());
+        return stringBuilder.toString();
+    }
+
 }
