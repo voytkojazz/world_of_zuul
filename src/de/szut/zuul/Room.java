@@ -35,30 +35,12 @@ public class Room
         this.exits = new HashMap<>();
     }
 
-    /**
-     * Define the exits of this room.  Every direction either leads
-     * to another room or is null (no exit there).
-     * @param north The north exit.
-     * @param east The east east.
-     * @param south The south exit.
-     * @param west The west exit.
-     */
-    public void setExits(Room north, Room east, Room south, Room west)
-    {
-        if(north != null) {
-            northExit = north;
-        }
-        if(east != null) {
-            eastExit = east;
-        }
-        if(south != null) {
-            southExit = south;
-        }
-        if(west != null) {
-            westExit = west;
-        }
-    }
 
+    /**
+     * a method to add an exit to the room
+     * @param direction - direction String
+     * @param neighbours - instance of Room class, to associate with this direction
+     */
     public void setExit(String direction, Room neighbours) {
         exits.put(direction, neighbours);
     }

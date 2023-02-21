@@ -16,7 +16,6 @@ package de.szut.zuul;
  * @author  Michael Kölling and David J. Barnes
  * @version 2016.02.29
  */
-
 public class Game 
 {
     private Parser parser;
@@ -64,33 +63,34 @@ public class Game
 
         sacrificialSite.setExit("east", marketsquare);
 
-        hut.setExits(null, jungle, templePyramid, tavern);
-
         hut.setExit("east", jungle);
         hut.setExit("south", templePyramid);
         hut.setExit("west", tavern);
 
-        jungle.setExits(null, null, null, hut);
-
         jungle.setExit("west", hut);
 
-        secretPassage.setExits(null, basement, null, cave);
         secretPassage.setExit("east", basement);
         secretPassage.setExit("west", cave);
 
-        cave.setExits(null, secretPassage, beach, null);
-        beach.setExits(cave, null, null, null);
-        basement.setExits(null, null, null, secretPassage);
-        wizardsRoom.setExits(null, null, null, null);
+        cave.setExit("east", secretPassage);
+        cave.setExit("south", beach);
 
-        // Initialize stairs
-        basement.setStairs(templePyramid, null);
-        templePyramid.setStairs(wizardsRoom, basement);
-        wizardsRoom.setStairs(null, templePyramid);
-        sacrificialSite.setStairs(null, cave);
-        cave.setStairs(sacrificialSite, null);
+        beach.setExit("north", cave);
 
-        currentRoom = marketsquare;  // start game on marketsquare
+
+        basement.setExit("west", secretPassage);
+
+        wizardsRoom.setExit("down", templePyramid);
+
+        templePyramid.setExit("up", wizardsRoom);
+        templePyramid.setExit("down", basement);
+
+        basement.setExit("up", templePyramid);
+
+        sacrificialSite.setExit("down", cave);
+        cave.setExit("up", sacrificialSite);
+
+        currentRoom = marketsquare;  // start game on market square
     }
 
     /**
