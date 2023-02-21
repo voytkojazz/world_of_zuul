@@ -90,6 +90,15 @@ public class Game
         sacrificialSite.setExit("down", cave);
         cave.setExit("up", sacrificialSite);
 
+        marketsquare.addItem(new Item("a bow", "a bow made of wood", 0.5));
+        cave.addItem(new Item("treasure", "a small treasure chest with coins", 7.5));
+        wizardsRoom.addItem(new Item("arrows", "a bag with various arrows", 1));
+        jungle.addItem(new Item("plant", "medical plant", 0.5));
+        jungle.addItem(new Item("cacao", "a small cacao tree", 5));
+        sacrificialSite.addItem(new Item("knife", "a spear with accompanying slingshot", 5));
+        tavern.addItem(new Item("food", "a plate of hearty meat and corn porridge", 0.5));
+        basement.addItem(new Item("jewerly", "a very pretty headdress", 1));
+
         currentRoom = marketsquare;  // start game on market square
     }
 
@@ -173,7 +182,7 @@ public class Game
         System.out.println("through the jungle. At once there is a glade. On it there a buildings...");
         System.out.println();
         System.out.println("Your command words are:");
-        parser.showCommands();
+        System.out.println(parser.showCommands());
     }
 
     /** 

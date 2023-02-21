@@ -23,6 +23,8 @@ public class Room
     private String description;
 
     private Map<String, Room> exits;
+
+    private Map<String, Item> items;
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -33,6 +35,7 @@ public class Room
     {
         this.description = description;
         this.exits = new HashMap<>();
+        this.items = new HashMap<>();
     }
 
 
@@ -69,9 +72,21 @@ public class Room
 
     public String getLongDescription() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("You are ").append(this.getDescription())
-                .append("\n").append("Exits: ").append(this.exitsToString());
+        stringBuilder.append("You are ").append(this.getDescription()).append("\n")
+                .append("Exits: ").append(this.exitsToString()).append("\n")
+                .append("Items in this room: ").append("\n");
+        for(Map.Entry<String, Item> itemEntry : items.entrySet()) {
+            stringBuilder.append(" - ")
+                    .append(itemEntry.getKey()).append(", ")
+                    .append(itemEntry.getValue().getDescription()).append(", ")
+                    .append(itemEntry.getValue().getWeight()).append(" kg")
+                    .append("\n");
+        }
         return stringBuilder.toString();
+    }
+
+    public void addItem(Item newItem) {
+        items.put(newItem.getName(), newItem);
     }
 
 }
