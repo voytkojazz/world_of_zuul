@@ -19,15 +19,17 @@ package de.szut.zuul;
 public class Game 
 {
     private Parser parser;
-    private Room currentRoom;
-        
+
+    private Player player;
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
+        player = new Player();
         createRooms();
         parser = new Parser();
+
     }
 
     /**
@@ -90,7 +92,7 @@ public class Game
         sacrificialSite.setExit("down", cave);
         cave.setExit("up", sacrificialSite);
 
-        marketsquare.addItem(new Item("a bow", "a bow made of wood", 0.5));
+        marketsquare.addItem(new Item("bow", "a bow made of wood", 0.5));
         cave.addItem(new Item("treasure", "a small treasure chest with coins", 7.5));
         wizardsRoom.addItem(new Item("arrows", "a bag with various arrows", 1));
         jungle.addItem(new Item("plant", "medical plant", 0.5));
@@ -98,8 +100,10 @@ public class Game
         sacrificialSite.addItem(new Item("knife", "a spear with accompanying slingshot", 5));
         tavern.addItem(new Item("food", "a plate of hearty meat and corn porridge", 0.5));
         basement.addItem(new Item("jewerly", "a very pretty headdress", 1));
-
-        currentRoom = marketsquare;  // start game on market square
+        Item magicMuffin = new Item("muffin", "a magic muffin", 0.5);
+        magicMuffin.setFood(true);
+        secretPassage.addItem(magicMuffin);
+        player.goTo(marketsquare);  // start game on market square
     }
 
     /**
@@ -134,7 +138,7 @@ public class Game
     }
 
     private void printRoomInformation() {
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
     }
 
     /**
@@ -164,6 +168,12 @@ public class Game
                 break;
             case "look":
                 look();
+                break;
+            case "take":
+                takeItem(command);
+                break;
+            case "drop":
+                dropItem(command);
                 break;
         }
         return wantToQuit;
@@ -200,30 +210,12 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = null;
-        if(direction.equals("north")) {
-            nextRoom = currentRoom.getExit(direction);
-        }
-        if(direction.equals("east")) {
-            nextRoom = currentRoom.getExit(direction);
-        }
-        if(direction.equals("south")) {
-            nextRoom = currentRoom.getExit(direction);
-        }
-        if(direction.equals("west")) {
-            nextRoom = currentRoom.getExit(direction);
-        }
-        if(direction.equals("up")) {
-            nextRoom = currentRoom.getExit(direction);
-        }
-        if(direction.equals("down")) {
-            nextRoom = currentRoom.getExit(direction);
-        }
+        Room nextRoom = player.getCurrentRoom().getExit(direction);
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
         else {
-            currentRoom = nextRoom;
+            player.goTo(nextRoom);
             printRoomInformation();
         }
     }
@@ -245,6 +237,49 @@ public class Game
     }
 
     private void look() {
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
+    }
+
+    private void takeItem(Command command) {
+        String itemName = command.getSecondWord();
+        if(itemName == null) {
+            System.out.println("Take what?");
+            return;
+        }
+        Item item = player.getCurrentRoom().removeItem(itemName);
+        if(item == null) {
+            System.out.println("The item " + itemName + " is not found in the room");
+            return;
+        }
+        boolean itemTaken = player.takeItem(item);
+        if(!itemTaken) {
+            System.out.println("The item is not taken, full capacity");
+        }
+        System.out.println(player.showStatus());
+    }
+
+    private void dropItem(Command command) {
+        String itemName = command.getSecondWord();
+        if(itemName == null) {
+            System.out.println("Drop what?");
+            return;
+        }
+        Item item = player.dropItem(itemName);
+        if(item == null) {
+            System.out.println("The item was not found in your inventory");
+            return;
+        }
+        player.getCurrentRoom().addItem(item);
+        System.out.println(player.showStatus());
+    }
+
+    private Item eat(Command command) {
+        String itemName = command.getSecondWord();
+        Item item = player.eat(itemName);
+        if(item == null) {
+            System.out.println("The item is not found in player's inventory or is not a food...");
+            return null;
+        }
+        return item;
     }
 }
