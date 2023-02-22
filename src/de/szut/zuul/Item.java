@@ -5,10 +5,13 @@ public class Item {
     private String description;
     private double weight;
 
+    private boolean isFood;
+
     public Item(String name, String description, double weight) {
         this.name = name;
         this.description = description;
         this.weight = weight;
+        this.isFood = false;
     }
 
     @Override
@@ -17,6 +20,7 @@ public class Item {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", weight=" + weight +
+                ", isFood=" + isFood +
                 '}';
     }
 
@@ -42,5 +46,13 @@ public class Item {
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    public boolean isFood() {
+        return isFood;
+    }
+
+    public void setFood(boolean food) {
+        isFood = food;
     }
 }

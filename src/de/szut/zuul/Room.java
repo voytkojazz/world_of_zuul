@@ -89,4 +89,12 @@ public class Room
         items.put(newItem.getName(), newItem);
     }
 
+    public Item removeItem(String name) {
+        Item removedItem = items.getOrDefault(name, null);
+        if(removedItem != null) {
+            items.remove(name);
+        }
+        return removedItem;
+    }
+
 }
