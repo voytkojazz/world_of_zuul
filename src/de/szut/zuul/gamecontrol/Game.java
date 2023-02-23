@@ -1,4 +1,10 @@
-package de.szut.zuul;
+package de.szut.zuul.gamecontrol;
+
+import de.szut.zuul.model.Item;
+import de.szut.zuul.model.Player;
+import de.szut.zuul.model.Room;
+import de.szut.zuul.exception.ItemNotFoundException;
+import de.szut.zuul.exception.ItemTooHeavyException;
 
 /**
  *  This class is the main class of the "World of Zuul" application. 
@@ -249,16 +255,13 @@ public class Game
             System.out.println("Take what?");
             return;
         }
-        Item item = player.getCurrentRoom().removeItem(itemName);
-        if(item == null) {
-            System.out.println("The item " + itemName + " is not found in the room");
-            return;
+        try {
+            Item item = player.getCurrentRoom().removeItem(itemName);
+            player.takeItem(item);
+            System.out.println(player.showStatus());
+        } catch (ItemNotFoundException | ItemTooHeavyException exception) {
+            exception.printStackTrace();
         }
-        boolean itemTaken = player.takeItem(item);
-        if(!itemTaken) {
-            System.out.println("The item is not taken, full capacity");
-        }
-        System.out.println(player.showStatus());
     }
 
     private void dropItem(Command command) {
@@ -267,13 +270,13 @@ public class Game
             System.out.println("Drop what?");
             return;
         }
-        Item item = player.dropItem(itemName);
-        if(item == null) {
-            System.out.println("The item was not found in your inventory");
-            return;
+        try {
+            Item item = player.dropItem(itemName);
+            player.getCurrentRoom().addItem(item);
+            System.out.println(player.showStatus());
+        } catch (ItemNotFoundException e) {
+            e.printStackTrace();
         }
-        player.getCurrentRoom().addItem(item);
-        System.out.println(player.showStatus());
     }
 
     private void eat(Command command) {

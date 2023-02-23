@@ -1,4 +1,6 @@
-package de.szut.zuul;
+package de.szut.zuul.model;
+
+import de.szut.zuul.exception.ItemNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -89,10 +91,13 @@ public class Room
         items.put(newItem.getName(), newItem);
     }
 
-    public Item removeItem(String name) {
+
+    public Item removeItem(String name) throws ItemNotFoundException {
         Item removedItem = items.getOrDefault(name, null);
         if(removedItem != null) {
             items.remove(name);
+        } else {
+            throw new ItemNotFoundException("This item does not exist");
         }
         return removedItem;
     }

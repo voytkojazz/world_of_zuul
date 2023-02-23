@@ -1,4 +1,7 @@
-package de.szut.zuul;
+package de.szut.zuul.model;
+
+import de.szut.zuul.exception.ItemNotFoundException;
+import de.szut.zuul.exception.ItemTooHeavyException;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -28,15 +31,15 @@ public class Player {
         return builder.toString();
     }
 
-    public boolean takeItem(Item item) {
+    public void takeItem(Item item) throws ItemTooHeavyException {
         if(isTakePossible(item)) {
             items.add(item);
-            return true;
+        } else {
+            throw new ItemTooHeavyException("Can not take the item " + item.getName() + ", full capacity");
         }
-        return false;
     }
 
-    public Item dropItem(String name) {
+    public Item dropItem(String name) throws ItemNotFoundException {
         Iterator<Item> itemsIterator = items.iterator();
         while(itemsIterator.hasNext()) {
             Item current = itemsIterator.next();
@@ -45,7 +48,7 @@ public class Player {
                 return current;
             }
         }
-        return null;
+        throw new ItemNotFoundException("You do not own " + name + "item!");
     }
 
     public Item eat(String name) {
