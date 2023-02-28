@@ -38,15 +38,13 @@ public class Game
     {
         player = new Player();
         commands = new CommandWords();
-        createRooms();
-        createCommands();
         parser = new Parser(commands);
     }
 
     /**
      * Create all the rooms and link their exits together.
      */
-    private void createRooms()
+    public void createRooms()
     {
         Room marketsquare, templePyramid, tavern, sacrificialSite, hut, jungle, secretPassage, cave, beach, basement, wizardsRoom;
       
@@ -119,7 +117,7 @@ public class Game
         player.goTo(marketsquare);  // start game on market square
     }
 
-    private void createCommands() {
+    public void createCommands() {
         Command goCommand = new GoCommand("go", player);
         Command dropCommand = new DropCommand("drop", player);
         Command eatCommand = new EatCommand("eat", player);
