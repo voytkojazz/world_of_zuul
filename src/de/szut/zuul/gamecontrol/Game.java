@@ -260,7 +260,7 @@ public class Game
             player.takeItem(item);
             System.out.println(player.showStatus());
         } catch (ItemNotFoundException | ItemTooHeavyException exception) {
-            exception.printStackTrace();
+            System.out.println(exception.getMessage());
         }
     }
 
@@ -275,18 +275,25 @@ public class Game
             player.getCurrentRoom().addItem(item);
             System.out.println(player.showStatus());
         } catch (ItemNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());;
         }
     }
 
     private void eat(Command command) {
         String itemName = command.getSecondWord();
-        Item item = player.eat(itemName);
-        if(item == null) {
-            return;
-        } else if (item.getName().equals("muffin")) {
-            player.setLoadCapacity(player.getLoadCapacity() + 5);
+        Item item = null;
+        try {
+            item = player.eat(itemName);
+            if (isMagicMuffin(item)) {
+                player.setLoadCapacity(player.getLoadCapacity() + 5);
+            }
+            System.out.println(player.showStatus());
+        } catch (ItemNotFoundException e) {
+            System.out.println(e.getMessage());
         }
-        System.out.println(player.showStatus());
+    }
+
+    private boolean isMagicMuffin(Item item) {
+        return item.getName().equals("muffin");
     }
 }

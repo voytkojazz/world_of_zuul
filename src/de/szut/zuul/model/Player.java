@@ -51,13 +51,8 @@ public class Player {
         throw new ItemNotFoundException("You do not own " + name + "item!");
     }
 
-    public Item eat(String name) {
-        try {
-            return removeFoodItem(name);
-        } catch (ItemNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
+    public Item eat(String name) throws ItemNotFoundException {
+        return removeFoodItem(name);
     }
 
     private Item removeFoodItem(String name) throws ItemNotFoundException {
