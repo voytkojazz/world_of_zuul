@@ -59,7 +59,7 @@ public class Player {
         Item foundedItem = items.stream()
                 .filter(item -> item.getName().equals(name) && item.isFood())
                 .findFirst()
-                .orElseThrow(() -> new ItemNotFoundException("Food item with name" + name + " is not found"));
+                .orElseThrow(() -> new ItemNotFoundException("Food item with name " + name + " is not found or is not a food's item"));
         items.remove(foundedItem);
         return foundedItem;
     }
