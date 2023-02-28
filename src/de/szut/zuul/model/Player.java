@@ -52,30 +52,23 @@ public class Player {
     }
 
     public Item eat(String name) {
-        Item itemToEat = findItem(name);
-        Boolean removed = removeFoodItem(name, itemToEat);
-        if(!removed) {
-            return null;
+        try {
+            return removeFoodItem(name);
+        } catch (ItemNotFoundException e) {
+            System.out.println(e.getMessage());
         }
-        return itemToEat;
+        return null;
     }
 
-    private Boolean removeFoodItem(String name, Item itemToEat) {
-        if(itemToEat == null) {
-            return false;
-        }
-        return items.removeIf(item -> item.getName().equals(name) && item.isFood());
+    private Item removeFoodItem(String name) throws ItemNotFoundException {
+        Item foundedItem = items.stream()
+                .filter(item -> item.getName().equals(name) && item.isFood())
+                .findFirst()
+                .orElseThrow(() -> new ItemNotFoundException("Food item with name" + name + " is not found"));
+        items.remove(foundedItem);
+        return foundedItem;
     }
 
-    private Item findItem(String name) {
-        Item itemToEat = null;
-        for(Item item : items) {
-            if (item.getName().equals(name)){
-                itemToEat = item;
-            }
-        }
-        return itemToEat;
-    }
 
     private boolean isTakePossible(Item item) {
         double totalWeight = calculateWeight();

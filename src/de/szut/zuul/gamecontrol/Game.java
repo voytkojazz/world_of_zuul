@@ -283,7 +283,6 @@ public class Game
         String itemName = command.getSecondWord();
         Item item = player.eat(itemName);
         if(item == null) {
-            System.out.println("The item is not found in player's inventory or is not a food...");
             return;
         } else if (item.getName().equals("muffin")) {
             player.setLoadCapacity(player.getLoadCapacity() + 5);
