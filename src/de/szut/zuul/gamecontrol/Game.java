@@ -1,5 +1,7 @@
 package de.szut.zuul.gamecontrol;
 
+import de.szut.zuul.commands.*;
+import de.szut.zuul.exception.CommandNotFoundException;
 import de.szut.zuul.model.Item;
 import de.szut.zuul.model.Player;
 import de.szut.zuul.model.Room;
@@ -27,15 +29,18 @@ public class Game
     private Parser parser;
 
     private Player player;
+
+    private CommandWords commands;
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
         player = new Player();
+        commands = new CommandWords();
         createRooms();
-        parser = new Parser();
-
+        createCommands();
+        parser = new Parser(commands);
     }
 
     /**
@@ -104,12 +109,31 @@ public class Game
         jungle.addItem(new Item("plant", "medical plant", 0.5));
         jungle.addItem(new Item("cacao", "a small cacao tree", 5));
         sacrificialSite.addItem(new Item("knife", "a spear with accompanying slingshot", 5));
-        tavern.addItem(new Item("food", "a plate of hearty meat and corn porridge", 0.5));
+        Item food = new Item("food", "a plate of hearty meat and corn porridge", 0.5);
+        food.setFood(true);
+        tavern.addItem(food);
         basement.addItem(new Item("jewerly", "a very pretty headdress", 1));
         Item magicMuffin = new Item("muffin", "a magic muffin", 0.5);
         magicMuffin.setFood(true);
         secretPassage.addItem(magicMuffin);
         player.goTo(marketsquare);  // start game on market square
+    }
+
+    private void createCommands() {
+        Command goCommand = new GoCommand("go", player);
+        Command dropCommand = new DropCommand("drop", player);
+        Command eatCommand = new EatCommand("eat", player);
+        Command helpCommand = new HelpCommand("help", player, commands);
+        Command lookCommand = new LookCommand("look", player);
+        Command takeCommand = new TakeCommand("take", player);
+        Command quitCommand = new QuitCommand("quit", player);
+        commands.addCommand(goCommand);
+        commands.addCommand(dropCommand);
+        commands.addCommand(eatCommand);
+        commands.addCommand(helpCommand);
+        commands.addCommand(lookCommand);
+        commands.addCommand(takeCommand);
+        commands.addCommand(quitCommand);
     }
 
     /**
@@ -118,14 +142,13 @@ public class Game
     public void play() 
     {            
         printWelcome();
-
-        // Enter the main command loop.  Here we repeatedly read commands and
-        // execute them until the game is over.
-                
-        boolean finished = false;
-        while (! finished) {
-            Command command = parser.getCommand();
-            finished = processCommand(command);
+        while (!player.isActive()) {
+            try {
+                Command command = parser.getCommand();
+                parser.executeCommand(command);
+            } catch (CommandNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -140,160 +163,6 @@ public class Game
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
-        printRoomInformation();
-    }
-
-    private void printRoomInformation() {
         System.out.println(player.getCurrentRoom().getLongDescription());
-    }
-
-    /**
-     * Given a command, process (that is: execute) the command.
-     * @param command The command to be processed.
-     * @return true If the command ends the game, false otherwise.
-     */
-    private boolean processCommand(Command command) 
-    {
-        boolean wantToQuit = false;
-
-        if(command.isUnknown()) {
-            System.out.println("I don't know what you mean...");
-            return false;
-        }
-
-        String commandWord = command.getCommandWord();
-        switch (commandWord) {
-            case "help":
-                printHelp();
-                break;
-            case "go":
-                goRoom(command);
-                break;
-            case "quit":
-                wantToQuit = quit(command);
-                break;
-            case "look":
-                look();
-                break;
-            case "take":
-                takeItem(command);
-                break;
-            case "drop":
-                dropItem(command);
-                break;
-            case "eat":
-                eat(command);
-                break;
-        }
-        return wantToQuit;
-    }
-
-    // implementations of user commands:
-
-    /**
-     * Print out some help information.
-     * Here we print some stupid, cryptic message and a list of the 
-     * command words.
-     */
-    private void printHelp() 
-    {
-        System.out.println("You are lost. You are alone. You wander");
-        System.out.println("through the jungle. At once there is a glade. On it there a buildings...");
-        System.out.println();
-        System.out.println("Your command words are:");
-        System.out.println(parser.showCommands());
-    }
-
-    /** 
-     * Try to go in one direction. If there is an exit, enter
-     * the new room, otherwise print an error message.
-     */
-    private void goRoom(Command command) 
-    {
-        if(!command.hasSecondWord()) {
-            // if there is no second word, we don't know where to go...
-            System.out.println("Go where?");
-            return;
-        }
-
-        String direction = command.getSecondWord();
-
-        // Try to leave current room.
-        Room nextRoom = player.getCurrentRoom().getExit(direction);
-        if (nextRoom == null) {
-            System.out.println("There is no door!");
-        }
-        else {
-            player.goTo(nextRoom);
-            printRoomInformation();
-        }
-    }
-
-    /** 
-     * "Quit" was entered. Check the rest of the command to see
-     * whether we really quit the game.
-     * @return true, if this command quits the game, false otherwise.
-     */
-    private boolean quit(Command command) 
-    {
-        if(command.hasSecondWord()) {
-            System.out.println("Quit what?");
-            return false;
-        }
-        else {
-            return true;  // signal that we want to quit
-        }
-    }
-
-    private void look() {
-        System.out.println(player.getCurrentRoom().getLongDescription());
-    }
-
-    private void takeItem(Command command) {
-        String itemName = command.getSecondWord();
-        if(itemName == null) {
-            System.out.println("Take what?");
-            return;
-        }
-        try {
-            Item item = player.getCurrentRoom().removeItem(itemName);
-            player.takeItem(item);
-            System.out.println(player.showStatus());
-        } catch (ItemNotFoundException | ItemTooHeavyException exception) {
-            System.out.println(exception.getMessage());
-        }
-    }
-
-    private void dropItem(Command command) {
-        String itemName = command.getSecondWord();
-        if(itemName == null) {
-            System.out.println("Drop what?");
-            return;
-        }
-        try {
-            Item item = player.dropItem(itemName);
-            player.getCurrentRoom().addItem(item);
-            System.out.println(player.showStatus());
-        } catch (ItemNotFoundException e) {
-            System.out.println(e.getMessage());;
-        }
-    }
-
-    private void eat(Command command) {
-        String itemName = command.getSecondWord();
-        Item item = null;
-        try {
-            item = player.eat(itemName);
-            if (isMagicMuffin(item)) {
-                player.setLoadCapacity(player.getLoadCapacity() + 5);
-            }
-            System.out.println(player.showStatus());
-        } catch (ItemNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private boolean isMagicMuffin(Item item) {
-        return item.getName().equals("muffin");
     }
 }

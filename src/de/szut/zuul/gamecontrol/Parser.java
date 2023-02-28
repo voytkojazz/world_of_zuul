@@ -1,5 +1,9 @@
 package de.szut.zuul.gamecontrol;
 
+import de.szut.zuul.commands.Command;
+import de.szut.zuul.commands.UnknownCommand;
+import de.szut.zuul.exception.CommandNotFoundException;
+
 import java.util.Scanner;
 
 /**
@@ -27,43 +31,44 @@ public class Parser
     /**
      * Create a parser to read from the terminal window.
      */
-    public Parser() 
+    public Parser(CommandWords commands)
     {
-        commands = new CommandWords();
+        this.commands = commands;
         reader = new Scanner(System.in);
     }
 
     /**
      * @return The next command from the user.
      */
-    public Command getCommand() 
-    {
-        String inputLine;   // will hold the full input line
+    public Command getCommand() throws CommandNotFoundException {
+        String inputLine;
         String word1 = null;
         String word2 = null;
 
-        System.out.print("> ");     // print prompt
+        System.out.print("> ");
 
         inputLine = reader.nextLine();
 
-        // Find up to two words on the line.
         Scanner tokenizer = new Scanner(inputLine);
         if(tokenizer.hasNext()) {
-            word1 = tokenizer.next();      // get first word
+            word1 = tokenizer.next();
             if(tokenizer.hasNext()) {
-                word2 = tokenizer.next();      // get second word
-                // note: we just ignore the rest of the input line.
+                word2 = tokenizer.next();
             }
         }
 
-        // Now check whether this word is known. If so, create a command
-        // with it. If not, create a "null" command (for unknown command).
         if(commands.isCommand(word1)) {
-            return new Command(word1, word2);
+            Command command = commands.getCommand(word1);
+            command.setSecondWord(word2);
+            return command;
         }
         else {
-            return new Command(null, word2); 
+            throw new CommandNotFoundException("Command " + word1 + " is not found!!!!");
         }
+    }
+
+    public void executeCommand(Command command) {
+        command.execute();
     }
 
     public String showCommands() {

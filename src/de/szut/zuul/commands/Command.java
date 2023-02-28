@@ -1,4 +1,6 @@
-package de.szut.zuul.gamecontrol;
+package de.szut.zuul.commands;
+
+import de.szut.zuul.model.Player;
 
 /**
  * This class is part of the "World of Zuul" application. 
@@ -19,22 +21,23 @@ package de.szut.zuul.gamecontrol;
  * @version 2016.02.29
  */
 
-public class Command
+public abstract class Command
 {
     private String commandWord;
     private String secondWord;
+
+    private Player player;
 
     /**
      * Create a command object. First and second word must be supplied, but
      * either one (or both) can be null.
      * @param firstWord The first word of the command. Null if the command
      *                  was not recognised.
-     * @param secondWord The second word of the command.
      */
-    public Command(String firstWord, String secondWord)
+    public Command(String firstWord, Player player)
     {
-        commandWord = firstWord;
-        this.secondWord = secondWord;
+        this.commandWord = firstWord;
+        this.player = player;
     }
 
     /**
@@ -56,6 +59,14 @@ public class Command
         return secondWord;
     }
 
+    public void setSecondWord(String secondWord) {
+        this.secondWord = secondWord;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
     /**
      * @return true if this command was not understood.
      */
@@ -71,5 +82,8 @@ public class Command
     {
         return (secondWord != null);
     }
+
+    public abstract void execute();
+
 }
 
