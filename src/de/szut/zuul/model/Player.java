@@ -11,7 +11,7 @@ import java.util.List;
 public class Player {
     private Room currentRoom;
     private double loadCapacity;
-    private List<Item> items;
+    private LinkedList<Item> items;
 
     private boolean active;
 
@@ -44,15 +44,12 @@ public class Player {
     }
 
     public Item dropItem(String name) throws ItemNotFoundException {
-        Iterator<Item> itemsIterator = items.iterator();
-        while (itemsIterator.hasNext()) {
-            Item current = itemsIterator.next();
-            if (current.getName().equals(name)) {
-                itemsIterator.remove();
-                return current;
-            }
-        }
-        throw new ItemNotFoundException("You do not own " + name + "item!");
+        Item toDrop = items.stream()
+                .filter(item -> item.getName().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new ItemNotFoundException("Item with name " + name + " is not found"));
+        items.remove(toDrop);
+        return toDrop;
     }
 
     public Item eat(String name) throws ItemNotFoundException {
@@ -75,11 +72,8 @@ public class Player {
     }
 
     private double calculateWeight() {
-        double totalWeight = 0;
-        for (Item i : items) {
-            totalWeight += i.getWeight();
-        }
-        return totalWeight;
+        return items.stream()
+                .map(Item::getWeight).mapToDouble(Double::doubleValue).sum();
     }
 
     public Room getCurrentRoom() {
