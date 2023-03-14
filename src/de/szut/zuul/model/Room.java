@@ -91,13 +91,12 @@ public class Room
         items.put(newItem.getName(), newItem);
     }
 
-
     public Item removeItem(String name) throws ItemNotFoundException {
         Item removedItem = items.getOrDefault(name, null);
         if(removedItem != null) {
             items.remove(name);
         } else {
-            throw new ItemNotFoundException("This item does not exist");
+            throw new ItemNotFoundException("This item does not exist or is not found in this room");
         }
         return removedItem;
     }

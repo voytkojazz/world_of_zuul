@@ -18,7 +18,6 @@ import java.util.Map;
 
 public class CommandWords
 {
-
     private Map<String, Command> commandsMap;
 
     /**
