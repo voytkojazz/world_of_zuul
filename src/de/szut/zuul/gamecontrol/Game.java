@@ -2,6 +2,7 @@ package de.szut.zuul.gamecontrol;
 
 import de.szut.zuul.commands.*;
 import de.szut.zuul.exception.CommandNotFoundException;
+import de.szut.zuul.model.Herb;
 import de.szut.zuul.model.Item;
 import de.szut.zuul.model.Player;
 import de.szut.zuul.model.Room;
@@ -104,7 +105,7 @@ public class Game
         marketsquare.addItem(new Item("bow", "a bow made of wood", 0.5));
         cave.addItem(new Item("treasure", "a small treasure chest with coins", 7.5));
         wizardsRoom.addItem(new Item("arrows", "a bag with various arrows", 1));
-        jungle.addItem(new Item("plant", "medical plant", 0.5));
+        jungle.addItem(new Herb("plant", "medical plant", 0.5));
         jungle.addItem(new Item("cacao", "a small cacao tree", 5));
         sacrificialSite.addItem(new Item("knife", "a spear with accompanying slingshot", 5));
         Item food = new Item("food", "a plate of hearty meat and corn porridge", 0.5);

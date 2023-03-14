@@ -4,21 +4,25 @@ import de.szut.zuul.model.Player;
 
 public class HeavylyInjuredState implements State{
 
-    private Player player;
+    private static State instance = null;
 
-    public HeavylyInjuredState(Player player) {
-        this.player = player;
+    private HeavylyInjuredState() {}
+
+    public static State getInstance() {
+        if(instance == null) {
+            instance = new HeavylyInjuredState();
+        }
+        return instance;
     }
 
     @Override
-    public void heal() {
-        player.changeState(new InjuredState(player));
-        System.out.println("Player is now in injured state");
+    public State heal() {
+        return InjuredState.getInstance();
     }
 
     @Override
-    public void injure() {
-        System.out.println("Player is already heavily injured");
+    public State injure() {
+        return HeavylyInjuredState.getInstance();
     }
 
     @Override

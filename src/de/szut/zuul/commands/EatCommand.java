@@ -18,6 +18,8 @@ public class EatCommand extends Command{
             item = getPlayer().eat(itemName);
             if (isMagicMuffin(item)) {
                 getPlayer().setLoadCapacity(getPlayer().getLoadCapacity() + 5);
+            } else if (isHealingHerb(item)) {
+                getPlayer().heal();
             }
             System.out.println(getPlayer().showStatus());
         } catch (ItemNotFoundException e) {
@@ -27,5 +29,9 @@ public class EatCommand extends Command{
 
     private boolean isMagicMuffin(Item item) {
         return item.getName().equals("muffin");
+    }
+
+    private boolean isHealingHerb(Item item) {
+        return item.getDescription().equals("medical plant");
     }
 }

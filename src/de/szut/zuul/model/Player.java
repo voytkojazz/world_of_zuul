@@ -3,6 +3,7 @@ package de.szut.zuul.model;
 import de.szut.zuul.exception.ItemNotFoundException;
 import de.szut.zuul.exception.ItemTooHeavyException;
 import de.szut.zuul.model.states.HealthyState;
+import de.szut.zuul.model.states.InjuredState;
 import de.szut.zuul.model.states.State;
 import java.util.LinkedList;
 
@@ -15,25 +16,10 @@ public class Player {
     private boolean active;
 
     public Player() {
-        this.state = new HealthyState(this);
+        this.state = InjuredState.getInstance();
         this.loadCapacity = 10;
         this.items = new LinkedList<>();
         this.active = false;
-    }
-
-    public String showStatus() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("> Status of the player:\n");
-        builder.append("State: ").append(this.getState()).append("\n");
-        builder.append("loadCapacity: ").append(loadCapacity).append("kg\n");
-        builder.append("taken items: ");
-        for (Item item : items) {
-            builder.append(item.getName()).append(", ").append(item.getWeight()).append("kg; ");
-        }
-        builder.append("\n");
-        builder.append("absorbed weight: ").append(calculateWeight()).append("kg\n");
-        builder.append(getCurrentRoom().getLongDescription());
-        return builder.toString();
     }
 
     public void takeItem(Item item) throws ItemTooHeavyException {
@@ -44,7 +30,17 @@ public class Player {
         }
     }
 
-    public void changeState(State state) {
+    public void injure() {
+        this.setState(state.injure());
+        this.showStatus();
+    }
+
+    public void heal() {
+        this.setState(state.heal());
+        this.showStatus();
+    }
+
+    public void setState(State state) {
         this.state = state;
     }
 
@@ -79,6 +75,21 @@ public class Player {
     private double calculateWeight() {
         return items.stream()
                 .map(Item::getWeight).mapToDouble(Double::doubleValue).sum();
+    }
+
+    public String showStatus() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("> Status of the player:\n");
+        builder.append("State: ").append(this.getState()).append("\n");
+        builder.append("loadCapacity: ").append(loadCapacity).append("kg\n");
+        builder.append("taken items: ");
+        for (Item item : items) {
+            builder.append(item.getName()).append(", ").append(item.getWeight()).append("kg; ");
+        }
+        builder.append("\n");
+        builder.append("absorbed weight: ").append(calculateWeight()).append("kg\n");
+        builder.append(getCurrentRoom().getLongDescription());
+        return builder.toString();
     }
 
     public Room getCurrentRoom() {
