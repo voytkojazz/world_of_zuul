@@ -2,13 +2,12 @@ package de.szut.zuul.model;
 
 import de.szut.zuul.exception.ItemNotFoundException;
 import de.szut.zuul.exception.ItemTooHeavyException;
-
-import java.util.Comparator;
-import java.util.Iterator;
+import de.szut.zuul.model.states.HealthyState;
+import de.szut.zuul.model.states.State;
 import java.util.LinkedList;
-import java.util.List;
 
 public class Player {
+    private State state;
     private Room currentRoom;
     private double loadCapacity;
     private LinkedList<Item> items;
@@ -16,6 +15,7 @@ public class Player {
     private boolean active;
 
     public Player() {
+        this.state = new HealthyState(this);
         this.loadCapacity = 10;
         this.items = new LinkedList<>();
         this.active = false;
@@ -24,6 +24,7 @@ public class Player {
     public String showStatus() {
         StringBuilder builder = new StringBuilder();
         builder.append("> Status of the player:\n");
+        builder.append("State: ").append(this.getState()).append("\n");
         builder.append("loadCapacity: ").append(loadCapacity).append("kg\n");
         builder.append("taken items: ");
         for (Item item : items) {
@@ -41,6 +42,10 @@ public class Player {
         } else {
             throw new ItemTooHeavyException("Can not take the item " + item.getName() + ", full capacity");
         }
+    }
+
+    public void changeState(State state) {
+        this.state = state;
     }
 
     public Item dropItem(String name) throws ItemNotFoundException {
@@ -98,5 +103,9 @@ public class Player {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public State getState() {
+        return state;
     }
 }
