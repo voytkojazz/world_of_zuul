@@ -6,8 +6,6 @@ import de.szut.zuul.model.Herb;
 import de.szut.zuul.model.Item;
 import de.szut.zuul.model.Player;
 import de.szut.zuul.model.Room;
-import de.szut.zuul.exception.ItemNotFoundException;
-import de.szut.zuul.exception.ItemTooHeavyException;
 
 /**
  *  This class is the main class of the "World of Zuul" application. 
@@ -27,13 +25,17 @@ import de.szut.zuul.exception.ItemTooHeavyException;
  */
 public class Game 
 {
+    private static final String NORTH = "north";
+    private static final String SOUTH = "south";
+    private static final String EAST = "east";
+    private static final String WEST = "west";
+    private static final String DOWN = "down";
+    private static final String UP = "up";
     private Parser parser;
-
     private Player player;
-
     private CommandWords commands;
     /**
-     * Create the game and initialise its internal map.
+     * Create the game and initialize dependencies: Player, Commands and Parser
      */
     public Game() 
     {
@@ -63,44 +65,44 @@ public class Game
         wizardsRoom = new Room("in a wizard's room");
 
         // initialise room exits
-        marketsquare.setExit("north", tavern);
-        marketsquare.setExit("east", templePyramid);
-        marketsquare.setExit("west", sacrificialSite);
+        marketsquare.setExit(NORTH, tavern);
+        marketsquare.setExit(EAST, templePyramid);
+        marketsquare.setExit(WEST, sacrificialSite);
 
-        templePyramid.setExit("north", hut);
-        templePyramid.setExit("west", marketsquare);
+        templePyramid.setExit(NORTH, hut);
+        templePyramid.setExit(WEST, marketsquare);
 
-        tavern.setExit("east", hut);
-        tavern.setExit("south", marketsquare);
+        tavern.setExit(EAST, hut);
+        tavern.setExit(SOUTH, marketsquare);
 
-        sacrificialSite.setExit("east", marketsquare);
+        sacrificialSite.setExit(EAST, marketsquare);
 
-        hut.setExit("east", jungle);
-        hut.setExit("south", templePyramid);
-        hut.setExit("west", tavern);
+        hut.setExit(EAST, jungle);
+        hut.setExit(SOUTH, templePyramid);
+        hut.setExit(WEST, tavern);
 
-        jungle.setExit("west", hut);
+        jungle.setExit(WEST, hut);
 
-        secretPassage.setExit("east", basement);
-        secretPassage.setExit("west", cave);
+        secretPassage.setExit(EAST, basement);
+        secretPassage.setExit(WEST, cave);
 
-        cave.setExit("east", secretPassage);
-        cave.setExit("south", beach);
+        cave.setExit(EAST, secretPassage);
+        cave.setExit(SOUTH, beach);
 
-        beach.setExit("north", cave);
+        beach.setExit(NORTH, cave);
 
 
-        basement.setExit("west", secretPassage);
+        basement.setExit(WEST, secretPassage);
 
-        wizardsRoom.setExit("down", templePyramid);
+        wizardsRoom.setExit(DOWN, templePyramid);
 
-        templePyramid.setExit("up", wizardsRoom);
-        templePyramid.setExit("down", basement);
+        templePyramid.setExit(UP, wizardsRoom);
+        templePyramid.setExit(DOWN, basement);
 
-        basement.setExit("up", templePyramid);
+        basement.setExit(UP, templePyramid);
 
-        sacrificialSite.setExit("down", cave);
-        cave.setExit("up", sacrificialSite);
+        sacrificialSite.setExit(DOWN, cave);
+        cave.setExit(UP, sacrificialSite);
 
         marketsquare.addItem(new Item("bow", "a bow made of wood", 0.5));
         cave.addItem(new Item("treasure", "a small treasure chest with coins", 7.5));
@@ -116,6 +118,10 @@ public class Game
         magicMuffin.setFood(true);
         secretPassage.addItem(magicMuffin);
         player.goTo(marketsquare);  // start game on market square
+    }
+
+    public void createItems() {
+        
     }
 
     public void createCommands() {

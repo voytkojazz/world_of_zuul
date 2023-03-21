@@ -12,4 +12,9 @@ public class UnknownCommand extends Command{
     public void execute() {
         System.out.println("I do not know what you mean...");
     }
+
+    @Override
+    public void back() {
+        
+    }
 }

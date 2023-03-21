@@ -1,7 +1,6 @@
 package de.szut.zuul.gamecontrol;
 
 import de.szut.zuul.commands.Command;
-
 import java.util.HashMap;
 import java.util.Map;
 

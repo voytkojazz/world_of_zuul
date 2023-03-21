@@ -12,4 +12,9 @@ public class LookCommand extends Command{
     public void execute() {
         System.out.println(getPlayer().getCurrentRoom().getLongDescription());
     }
+
+    @Override
+    public void back() {
+        execute();
+    }
 }

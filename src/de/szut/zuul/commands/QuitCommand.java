@@ -1,6 +1,5 @@
 package de.szut.zuul.commands;
 
-import de.szut.zuul.gamecontrol.Game;
 import de.szut.zuul.model.Player;
 
 public class QuitCommand extends Command{
@@ -11,6 +10,11 @@ public class QuitCommand extends Command{
 
     @Override
     public void execute() {
+        getPlayer().setActive(false);
+    }
 
+    @Override
+    public void back() {
+      // quit command have no undo feauture
     }
 }

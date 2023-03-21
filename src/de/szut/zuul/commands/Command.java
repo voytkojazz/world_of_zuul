@@ -25,7 +25,6 @@ public abstract class Command
 {
     private String commandWord;
     private String secondWord;
-
     private Player player;
 
     /**
@@ -68,14 +67,6 @@ public abstract class Command
     }
 
     /**
-     * @return true if this command was not understood.
-     */
-    public boolean isUnknown()
-    {
-        return (commandWord == null);
-    }
-
-    /**
      * @return true if the command has a second word.
      */
     public boolean hasSecondWord()
@@ -84,6 +75,8 @@ public abstract class Command
     }
 
     public abstract void execute();
+
+    public abstract void back();
 
 }
 

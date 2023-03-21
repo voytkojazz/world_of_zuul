@@ -77,6 +77,14 @@ public class Player {
                 .map(Item::getWeight).mapToDouble(Double::doubleValue).sum();
     }
 
+    public void decrementCapacity(int capacity) {
+        this.loadCapacity -= capacity;
+    }
+
+    public void incrementCapacity(int capacity) {
+        this.loadCapacity += capacity;
+    }
+
     public String showStatus() {
         StringBuilder builder = new StringBuilder();
         builder.append("> Status of the player:\n");
@@ -119,4 +127,5 @@ public class Player {
     public State getState() {
         return state;
     }
+
 }

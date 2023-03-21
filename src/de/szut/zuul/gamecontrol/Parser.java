@@ -1,9 +1,9 @@
 package de.szut.zuul.gamecontrol;
 
 import de.szut.zuul.commands.Command;
-import de.szut.zuul.commands.UnknownCommand;
 import de.szut.zuul.exception.CommandNotFoundException;
 
+import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
@@ -28,13 +28,16 @@ public class Parser
     private CommandWords commands;  // holds all valid command words
     private Scanner reader;         // source of command input
 
+    private LinkedList<String> commandsHistory;
+
     /**
      * Create a parser to read from the terminal window.
      */
     public Parser(CommandWords commands)
     {
         this.commands = commands;
-        reader = new Scanner(System.in);
+        this.reader = new Scanner(System.in);
+        this.commandsHistory = new LinkedList<>();
     }
 
     /**
@@ -49,14 +52,14 @@ public class Parser
 
         inputLine = reader.nextLine();
 
-        Scanner tokenizer = new Scanner(inputLine);
-        if(tokenizer.hasNext()) {
-            word1 = tokenizer.next();
+        try (Scanner tokenizer = new Scanner(inputLine)) {
             if(tokenizer.hasNext()) {
-                word2 = tokenizer.next();
+                word1 = tokenizer.next();
+                if(tokenizer.hasNext()) {
+                    word2 = tokenizer.next();
+                }
             }
         }
-
         if(commands.isCommand(word1)) {
             Command command = commands.getCommand(word1);
             command.setSecondWord(word2);
@@ -69,6 +72,7 @@ public class Parser
 
     public void executeCommand(Command command) {
         command.execute();
+        commandsHistory.push(command.getCommandWord());
     }
 
     public String showCommands() {

@@ -20,4 +20,9 @@ public class HelpCommand extends Command{
         System.out.println("Your command words are:");
         System.out.println(commandWords.showAll());
     }
+
+    @Override
+    public void back() {
+        execute();
+    }
 }

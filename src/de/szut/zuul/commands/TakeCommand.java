@@ -5,10 +5,15 @@ import de.szut.zuul.exception.ItemTooHeavyException;
 import de.szut.zuul.model.Item;
 import de.szut.zuul.model.Player;
 
+import java.util.LinkedList;
+
 public class TakeCommand extends Command{
+
+    private LinkedList<Item> itemsHistory;
 
     public TakeCommand(String firstWord, Player player) {
         super(firstWord, player);
+        itemsHistory = new LinkedList<>();
     }
 
     @Override
@@ -21,9 +26,21 @@ public class TakeCommand extends Command{
         try {
             Item item = getPlayer().getCurrentRoom().removeItem(itemName);
             getPlayer().takeItem(item);
+            itemsHistory.push(item);
             System.out.println(getPlayer().showStatus());
         } catch (ItemNotFoundException | ItemTooHeavyException exception) {
             System.out.println(exception.getMessage());
+        }
+    }
+
+    @Override
+    public void back() {
+        Item itemToDropBack = itemsHistory.pop();
+        try {
+            getPlayer().dropItem(itemToDropBack.getName());
+            getPlayer().getCurrentRoom().addItem(itemToDropBack);
+        } catch (ItemNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

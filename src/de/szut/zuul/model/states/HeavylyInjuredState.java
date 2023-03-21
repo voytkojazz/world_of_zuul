@@ -1,7 +1,5 @@
 package de.szut.zuul.model.states;
 
-import de.szut.zuul.model.Player;
-
 public class HeavylyInjuredState implements State{
 
     private static State instance = null;
