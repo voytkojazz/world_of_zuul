@@ -61,7 +61,7 @@ public class Parser
     private String[] takeInput() {
         String word1 = null;
         String word2 = null;
-        String inputLine = null;
+        String inputLine;
 
         System.out.print("> ");
         inputLine = reader.nextLine();
@@ -74,9 +74,5 @@ public class Parser
             }
         }
         return new String[] {word1, word2};
-    }
-
-    public String showCommands() {
-        return commandManager.getAllCommands();
     }
 }

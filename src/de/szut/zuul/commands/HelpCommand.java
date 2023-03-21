@@ -6,7 +6,7 @@ import de.szut.zuul.model.Player;
 public class HelpCommand extends Command{
 
     private static final String COMMAND_WORD = "help";
-    CommandManager commandManager;
+    private final CommandManager commandManager;
 
     public HelpCommand(Player player, CommandManager commandManager) {
         super(COMMAND_WORD, player);

@@ -10,7 +10,7 @@ import java.util.LinkedList;
 public class DropCommand extends Command {
 
     private static final String COMMAND_WORD = "drop";
-    LinkedList<String> commandsStack;
+    private final LinkedList <String> commandsStack;
 
     public DropCommand(Player player) {
         super(COMMAND_WORD, player);

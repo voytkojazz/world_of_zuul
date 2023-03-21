@@ -32,9 +32,9 @@ public class Game
     private static final String WEST = "west";
     private static final String DOWN = "down";
     private static final String UP = "up";
-    private Parser parser;
-    private Player player;
-    private CommandManager commandManager;
+    private final Parser parser;
+    private final Player player;
+    private final CommandManager commandManager;
     /**
      * Create the game and initialize dependencies: Player, Commands and Parser
      */
@@ -119,10 +119,6 @@ public class Game
         magicMuffin.setFood(true);
         secretPassage.addItem(magicMuffin);
         player.goTo(marketsquare);  // start game on market square
-    }
-
-    public void createItems() {
-        
     }
 
     public void createCommands() {

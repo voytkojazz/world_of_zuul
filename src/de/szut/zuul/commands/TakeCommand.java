@@ -10,7 +10,7 @@ import java.util.LinkedList;
 public class TakeCommand extends Command{
 
     private static final String COMMAND_WORD = "take";
-    private LinkedList<Item> itemsHistory;
+    private final LinkedList<Item> itemsHistory;
 
     public TakeCommand(Player player) {
         super(COMMAND_WORD, player);

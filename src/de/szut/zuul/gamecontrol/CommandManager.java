@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class CommandManager
 {
-    private Map<String, Command> commandsMap;
+    private final Map<String, Command> commandsMap;
     private final CommandHistory history;
 
     /**
@@ -67,7 +67,4 @@ public class CommandManager
         return builder.toString();
     }
 
-    public void setCommandsMap(Map<String, Command> commandsMap) {
-        this.commandsMap = commandsMap;
-    }
 }

@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 public class EatCommand extends Command{
     private static final String COMMAND_WORD = "eat";
-    private LinkedList<Item> itemsHistoryStack;
+    private final LinkedList<Item> itemsHistoryStack;
 
     public EatCommand(Player player) {
         super(COMMAND_WORD, player);
@@ -19,7 +19,7 @@ public class EatCommand extends Command{
     @Override
     public void execute() {
         String itemName = getSecondWord();
-        Item item = null;
+        Item item;
         try {
             item = getPlayer().eat(itemName);
             if (isMagicMuffin(item)) {

@@ -10,7 +10,7 @@ public class Player {
     private State state; // the Health State of Player
     private Room currentRoom; // Room where player is located
     private double loadCapacity; // player's items have weight and loadCapacity is the maximum weight that player can take
-    private LinkedList<Item> items; // collection of player's items
+    private final LinkedList<Item> items; // collection of player's items
     private boolean active; // boolean to track if player wants to play the game
 
     /**
@@ -166,14 +166,6 @@ public class Player {
      */
     public void goTo(Room nextRoom) {
         this.currentRoom = nextRoom;
-    }
-
-    public double getLoadCapacity() {
-        return loadCapacity;
-    }
-
-    public void setLoadCapacity(double loadCapacity) {
-        this.loadCapacity = loadCapacity;
     }
 
     public boolean isActive() {

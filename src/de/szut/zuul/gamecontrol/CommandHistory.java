@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 public class CommandHistory {
-    LinkedList<Command> history;
+    private final LinkedList <Command> history;
 
     public CommandHistory() {
         this.history = new LinkedList<>();

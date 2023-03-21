@@ -22,11 +22,11 @@ import java.util.Map;
 
 public class Room 
 {
-    private String description;
+    private final String description;
 
-    private Map<String, Room> exits;
+    private final Map<String, Room> exits;
 
-    private Map<String, Item> items;
+    private final Map<String, Item> items;
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
