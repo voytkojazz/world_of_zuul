@@ -2,6 +2,7 @@ package de.szut.zuul.gamecontrol;
 
 import de.szut.zuul.commands.*;
 import de.szut.zuul.exception.CommandNotFoundException;
+import de.szut.zuul.exception.NoCommandsHistoryException;
 import de.szut.zuul.model.Herb;
 import de.szut.zuul.model.Item;
 import de.szut.zuul.model.Player;
@@ -33,15 +34,15 @@ public class Game
     private static final String UP = "up";
     private Parser parser;
     private Player player;
-    private CommandWords commands;
+    private CommandManager commandManager;
     /**
      * Create the game and initialize dependencies: Player, Commands and Parser
      */
     public Game() 
     {
         player = new Player();
-        commands = new CommandWords();
-        parser = new Parser(commands);
+        commandManager = new CommandManager();
+        parser = new Parser(commandManager);
     }
 
     /**
@@ -125,20 +126,22 @@ public class Game
     }
 
     public void createCommands() {
-        Command goCommand = new GoCommand("go", player);
-        Command dropCommand = new DropCommand("drop", player);
-        Command eatCommand = new EatCommand("eat", player);
-        Command helpCommand = new HelpCommand("help", player, commands);
-        Command lookCommand = new LookCommand("look", player);
-        Command takeCommand = new TakeCommand("take", player);
-        Command quitCommand = new QuitCommand("quit", player);
-        commands.addCommand(goCommand);
-        commands.addCommand(dropCommand);
-        commands.addCommand(eatCommand);
-        commands.addCommand(helpCommand);
-        commands.addCommand(lookCommand);
-        commands.addCommand(takeCommand);
-        commands.addCommand(quitCommand);
+        Command goCommand = new GoCommand(player);
+        Command dropCommand = new DropCommand(player);
+        Command eatCommand = new EatCommand(player);
+        Command helpCommand = new HelpCommand(player, commandManager);
+        Command lookCommand = new LookCommand(player);
+        Command takeCommand = new TakeCommand(player);
+        Command quitCommand = new QuitCommand(player);
+        Command backCommand = new BackCommand(player);
+        commandManager.addCommand(goCommand);
+        commandManager.addCommand(dropCommand);
+        commandManager.addCommand(eatCommand);
+        commandManager.addCommand(helpCommand);
+        commandManager.addCommand(lookCommand);
+        commandManager.addCommand(takeCommand);
+        commandManager.addCommand(quitCommand);
+        commandManager.addCommand(backCommand);
     }
 
     /**
@@ -147,11 +150,11 @@ public class Game
     public void play() 
     {            
         printWelcome();
-        while (!player.isActive()) {
+        while (player.isActive()) {
             try {
                 Command command = parser.getCommand();
-                parser.executeCommand(command);
-            } catch (CommandNotFoundException e) {
+                commandManager.executeCommand(command);
+            } catch (CommandNotFoundException | NoCommandsHistoryException e) {
                 System.out.println(e.getMessage());
             }
         }

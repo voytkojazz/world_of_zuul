@@ -2,36 +2,25 @@ package de.szut.zuul.commands;
 
 import de.szut.zuul.model.Player;
 
-/**
- * This class is part of the "World of Zuul" application. 
- * "World of Zuul" is a very simple, text based adventure game.  
- *
- * This class holds information about a command that was issued by the user.
- * A command currently consists of two strings: a command word and a second
- * word (for example, if the command was "take map", then the two strings
- * obviously are "take" and "map").
- * 
- * The way this is used is: Commands are already checked for being valid
- * command words. If the user entered an invalid command (a word that is not
- * known) then the command word is <null>.
- *
- * If the command had only one word, then the second word is <null>.
- * 
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
- */
 
+/**
+ * This abtract class is part of World of Zuul application.
+ * It represents an "Adventure" command that can be executed
+ * Commands must contain command word as a String and a Player instance that created a command.
+ * First words always represents a command word, for instance "go", "eat" etc.
+ * Second word of command can be null.
+ * Second word represents something that the action will be performed on.
+ * Concrete Commands would extend and implement methods of this abstract class
+ */
 public abstract class Command
 {
-    private String commandWord;
+    private final String commandWord;
     private String secondWord;
-    private Player player;
+    private final Player player;
 
     /**
-     * Create a command object. First and second word must be supplied, but
-     * either one (or both) can be null.
-     * @param firstWord The first word of the command. Null if the command
-     *                  was not recognised.
+     * @param firstWord - String - a command word. Represents some action (go, eat, drop etc)
+     * @param player - Player - a Player instance. Creator of the command, for whom the command would be executed
      */
     public Command(String firstWord, Player player)
     {
@@ -40,11 +29,10 @@ public abstract class Command
     }
 
     /**
-     * Return the command word (the first word) of this command. If the
-     * command was not understood, the result is null.
+     * Return the command word (the first word) of this command.
      * @return The command word.
      */
-    public String getCommandWord()
+    public  String getCommandWord()
     {
         return commandWord;
     }
@@ -58,6 +46,12 @@ public abstract class Command
         return secondWord;
     }
 
+    /**
+     * sets a second word (word that tells the programm a participant of the action,
+     * for example "go east". East is secondWord).
+     * Method is used for changing the participant of action
+     * @param secondWord
+     */
     public void setSecondWord(String secondWord) {
         this.secondWord = secondWord;
     }
@@ -74,8 +68,15 @@ public abstract class Command
         return (secondWord != null);
     }
 
+    /**
+     * implementations of this method must contains a "business logic" of concrete commands
+     */
     public abstract void execute();
 
+
+    /**
+     * implementations of this method must contain logic to revert the consequences of command's execution
+     */
     public abstract void back();
 
 }

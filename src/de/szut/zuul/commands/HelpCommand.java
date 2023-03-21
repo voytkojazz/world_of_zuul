@@ -1,15 +1,16 @@
 package de.szut.zuul.commands;
 
-import de.szut.zuul.gamecontrol.CommandWords;
+import de.szut.zuul.gamecontrol.CommandManager;
 import de.szut.zuul.model.Player;
 
 public class HelpCommand extends Command{
 
-    CommandWords commandWords;
+    private static final String COMMAND_WORD = "help";
+    CommandManager commandManager;
 
-    public HelpCommand(String firstWord, Player player, CommandWords commands) {
-        super(firstWord, player);
-        this.commandWords = commands;
+    public HelpCommand(Player player, CommandManager commandManager) {
+        super(COMMAND_WORD, player);
+        this.commandManager = commandManager;
     }
 
     @Override
@@ -18,7 +19,7 @@ public class HelpCommand extends Command{
         System.out.println("through the jungle. At once there is a glade. On it there a buildings...");
         System.out.println();
         System.out.println("Your command words are:");
-        System.out.println(commandWords.showAll());
+        System.out.println(commandManager.getAllCommands());
     }
 
     @Override

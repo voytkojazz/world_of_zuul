@@ -8,11 +8,11 @@ import de.szut.zuul.model.Player;
 import java.util.LinkedList;
 
 public class EatCommand extends Command{
-
+    private static final String COMMAND_WORD = "eat";
     private LinkedList<Item> itemsHistoryStack;
 
-    public EatCommand(String firstWord, Player player) {
-        super(firstWord, player);
+    public EatCommand(Player player) {
+        super(COMMAND_WORD, player);
         this.itemsHistoryStack = new LinkedList<>();
     }
 

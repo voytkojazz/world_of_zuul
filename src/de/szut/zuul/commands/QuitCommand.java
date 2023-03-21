@@ -4,8 +4,10 @@ import de.szut.zuul.model.Player;
 
 public class QuitCommand extends Command{
 
-    public QuitCommand(String firstWord, Player player) {
-        super(firstWord, player);
+    private static final String COMMAND_WORD = "quit";
+
+    public QuitCommand(Player player) {
+        super(COMMAND_WORD, player);
     }
 
     @Override

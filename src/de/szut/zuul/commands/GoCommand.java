@@ -7,10 +7,11 @@ import java.util.LinkedList;
 
 public class GoCommand extends Command{
 
+    private static final String COMMAND_WORD = "go";
     private LinkedList<Room> roomsHistory;
 
-    public GoCommand(String firstWord, Player player) {
-        super(firstWord, player);
+    public GoCommand(Player player) {
+        super(COMMAND_WORD, player);
         this.roomsHistory = new LinkedList<>();
     }
 

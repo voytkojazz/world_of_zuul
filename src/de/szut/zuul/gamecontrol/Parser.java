@@ -2,8 +2,8 @@ package de.szut.zuul.gamecontrol;
 
 import de.szut.zuul.commands.Command;
 import de.szut.zuul.exception.CommandNotFoundException;
+import de.szut.zuul.exception.NoCommandsHistoryException;
 
-import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
@@ -15,53 +15,36 @@ import java.util.Scanner;
  * tries to interpret the line as a two word command. It returns the command
  * as an object of class Command.
  *
- * The parser has a set of known command words. It checks user input against
+ * The parser takes a set of known command words ({@link CommandManager}) in constructor. It checks user input against
  * the known commands, and if the input is not one of the known commands, it
- * returns a command object that is marked as an unknown command.
- * 
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * throws a {@link CommandNotFoundException}.
+ *
  */
 
 public class Parser 
 {
-    private CommandWords commands;  // holds all valid command words
-    private Scanner reader;         // source of command input
-
-    private LinkedList<String> commandsHistory;
+    private final CommandManager commandManager;  // holds all valid command words
+    private final Scanner reader;         // source of command input
 
     /**
      * Create a parser to read from the terminal window.
      */
-    public Parser(CommandWords commands)
+    public Parser(CommandManager commandManager)
     {
-        this.commands = commands;
+        this.commandManager = commandManager;
         this.reader = new Scanner(System.in);
-        this.commandsHistory = new LinkedList<>();
     }
 
     /**
      * @return The next command from the user.
      */
-    public Command getCommand() throws CommandNotFoundException {
-        String inputLine;
-        String word1 = null;
-        String word2 = null;
+    public Command getCommand() throws CommandNotFoundException, NoCommandsHistoryException {
+        String[] userInput = takeInput();
+        String word1 = userInput[0];
+        String word2 = userInput[1];
 
-        System.out.print("> ");
-
-        inputLine = reader.nextLine();
-
-        try (Scanner tokenizer = new Scanner(inputLine)) {
-            if(tokenizer.hasNext()) {
-                word1 = tokenizer.next();
-                if(tokenizer.hasNext()) {
-                    word2 = tokenizer.next();
-                }
-            }
-        }
-        if(commands.isCommand(word1)) {
-            Command command = commands.getCommand(word1);
+        if(commandManager.isCommand(word1)) {
+            Command command = commandManager.getCommand(word1);
             command.setSecondWord(word2);
             return command;
         }
@@ -70,13 +53,30 @@ public class Parser
         }
     }
 
-    public void executeCommand(Command command) {
-        command.execute();
-        commandsHistory.push(command.getCommandWord());
+
+    /**
+     * takes the user's input and parses first two words
+     * @return String[] - where [0] is the first command word and [1] is the second word
+     */
+    private String[] takeInput() {
+        String word1 = null;
+        String word2 = null;
+        String inputLine = null;
+
+        System.out.print("> ");
+        inputLine = reader.nextLine();
+        try (Scanner tokenizer = new Scanner(inputLine)) {
+            if(tokenizer.hasNext()) {
+                word1 = tokenizer.next();
+                if(tokenizer.hasNext()) {
+                    word2 = tokenizer.next();
+                }
+            }
+        }
+        return new String[] {word1, word2};
     }
 
     public String showCommands() {
-        return commands.showAll();
+        return commandManager.getAllCommands();
     }
-
 }

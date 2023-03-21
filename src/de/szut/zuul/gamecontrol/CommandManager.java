@@ -1,6 +1,9 @@
 package de.szut.zuul.gamecontrol;
 
+import de.szut.zuul.commands.BackCommand;
 import de.szut.zuul.commands.Command;
+import de.szut.zuul.exception.NoCommandsHistoryException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,24 +11,24 @@ import java.util.Map;
  * This class is part of the "World of Zuul" application. 
  * "World of Zuul" is a very simple, text based adventure game.  
  * 
- * This class holds an enumeration of all command words known to the game.
+ * This class holds a Map of all command words known to the game.
  * It is used to recognise commands as they are typed in.
  *
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
  */
 
-public class CommandWords
+public class CommandManager
 {
     private Map<String, Command> commandsMap;
+    private final CommandHistory history;
 
     /**
-     * Constructor - initialise the command words.
+     * Constructor - create a new intance of CommandManager.
+     * initializes CommandHistory and new HashMap for available commands
      */
-    public CommandWords()
+    public CommandManager()
     {
+        this.history = new CommandHistory();
         this.commandsMap = new HashMap<>();
-        // nothing to do at the moment...
     }
 
     /**
@@ -38,19 +41,33 @@ public class CommandWords
         return commandsMap.containsKey(commandString);
     }
 
-    public Command getCommand(String commandString) {
-        return commandsMap.get(commandString);
+    public Command getCommand(String commandString) throws NoCommandsHistoryException {
+        Command toReturn = commandsMap.get(commandString);
+        if (toReturn instanceof BackCommand) {
+            BackCommand backCommand = (BackCommand) toReturn;
+            backCommand.setCommand(history.pop());
+        }
+        return toReturn;
+    }
+
+    public void executeCommand(Command command) {
+        command.execute();
+        history.push(command);
     }
 
     public void addCommand(Command command) {
         commandsMap.put(command.getCommandWord(), command);
     }
 
-    public String showAll(){
+    public String getAllCommands(){
         StringBuilder builder = new StringBuilder();
         for (String command : commandsMap.keySet()) {
             builder.append(command).append(" ");
         }
         return builder.toString();
+    }
+
+    public void setCommandsMap(Map<String, Command> commandsMap) {
+        this.commandsMap = commandsMap;
     }
 }

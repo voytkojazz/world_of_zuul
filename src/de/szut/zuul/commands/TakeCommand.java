@@ -9,10 +9,11 @@ import java.util.LinkedList;
 
 public class TakeCommand extends Command{
 
+    private static final String COMMAND_WORD = "take";
     private LinkedList<Item> itemsHistory;
 
-    public TakeCommand(String firstWord, Player player) {
-        super(firstWord, player);
+    public TakeCommand(Player player) {
+        super(COMMAND_WORD, player);
         itemsHistory = new LinkedList<>();
     }
 
@@ -39,6 +40,7 @@ public class TakeCommand extends Command{
         try {
             getPlayer().dropItem(itemToDropBack.getName());
             getPlayer().getCurrentRoom().addItem(itemToDropBack);
+            System.out.println(getPlayer().showStatus());
         } catch (ItemNotFoundException e) {
             System.out.println(e.getMessage());
         }

@@ -9,11 +9,11 @@ import java.util.LinkedList;
 
 public class DropCommand extends Command {
 
+    private static final String COMMAND_WORD = "drop";
     LinkedList<String> commandsStack;
 
-
-    public DropCommand(String firstWord, Player player) {
-        super(firstWord, player);
+    public DropCommand(Player player) {
+        super(COMMAND_WORD, player);
         this.commandsStack = new LinkedList<>();
     }
 

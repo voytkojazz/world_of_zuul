@@ -4,8 +4,10 @@ import de.szut.zuul.model.Player;
 
 public class UnknownCommand extends Command{
 
-    public UnknownCommand(String firstWord, Player player) {
-        super(firstWord, player);
+    private static final String COMMAND_WORD = "unknown";
+
+    public UnknownCommand(Player player) {
+        super(COMMAND_WORD, player);
     }
 
     @Override

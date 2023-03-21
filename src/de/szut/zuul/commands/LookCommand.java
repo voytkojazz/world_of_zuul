@@ -4,8 +4,10 @@ import de.szut.zuul.model.Player;
 
 public class LookCommand extends Command{
 
-    public LookCommand(String firstWord, Player player) {
-        super(firstWord, player);
+    public static final String COMMAND_WORD = "look";
+
+    public LookCommand(Player player) {
+        super(COMMAND_WORD, player);
     }
 
     @Override
